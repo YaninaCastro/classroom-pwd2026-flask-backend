@@ -1,4 +1,13 @@
 #/
-venv
+#venv
+#.env
+#.devcontainer
+
+venv/
 .env
-.devcontainer
+.env.distr
+
+__pycache__/
+*.pyc
+
+.devcontainer/

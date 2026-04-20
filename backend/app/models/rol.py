@@ -1,11 +1,9 @@
 from app.models import db
+from app.models.base_model import BaseModel
 
-class Rol(db.Model):
+class Rol(BaseModel):
     __tablename__="roles"
-    id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String, unique = True)
-    created_at = db.Column(db.DateTime, server_default = db.func.now())
-    updated_at = db.Column(db.DateTime, onupdate = db.func.now())
     activo = db.Column(db.String(1), default = 'S')
     
     

@@ -25,7 +25,7 @@ services:
       - pgdata:/var/lib/postgresql/data
     networks:
       - pwd_network
-  pgdamin:
+  pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin_pwd
     ports:
