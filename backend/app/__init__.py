@@ -10,13 +10,14 @@ from app.models.user import User
 from app.models.rol import Rol
 from app.models.categoria import Categoria
 from app.models.proveedor import Proveedor
-#from app.models.producto import Producto
+from app.models.producto import Producto
 #from app.models.movimiento_stock import MovimientoStock
 
 from app.routes.user_routes import users
 from app.routes.rol_routes import roles
 from app.routes.categoria_routes import categorias
 from app.routes.proveedor_routes import proveedores
+from app.routes.producto_routes import productos
 from app.routes.auth_routes import auth_bp
 
 
@@ -41,6 +42,7 @@ def create_app():
     app.register_blueprint(roles)
     app.register_blueprint(categorias)
     app.register_blueprint(proveedores)
+    app.register_blueprint(productos)
     app.register_blueprint(auth_bp)
     
     @app.route('/')
