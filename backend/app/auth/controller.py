@@ -18,7 +18,7 @@ class AuthController:
             return jsonify({'message': 'Faltan datos'}), 422
 
         try:
-            # 🔴 IMPORTANTE: operador
+            # operador
             rol_user = db.session.execute(
                 db.select(Rol).filter_by(nombre='operador')
             ).scalar_one_or_none()
