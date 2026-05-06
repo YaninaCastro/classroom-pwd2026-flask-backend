@@ -1,5 +1,5 @@
 from app.models.proveedor import Proveedor
-from app.models import db
+from app.database import db
 
 class ProveedorController:
 

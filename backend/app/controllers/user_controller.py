@@ -2,7 +2,7 @@ from typing import Literal
 
 from sqlalchemy.exc import IntegrityError
 from app.models.user import User
-from app.models import db
+from app.database import db
 from flask import Response, jsonify
 from app.controllers import Controller
 
@@ -23,28 +23,39 @@ class UserController (Controller):
             return jsonify(usuario.to_dict()), 200
         return jsonify({"message": 'usuario no encontrado'}), 404
     
+    
     @staticmethod
     def create(request) -> tuple[Response, int]:
-        nombre:str = request['nombre']
-        email:str = request['email']
-        error :str | None = None
-        if nombre is None:
-            error = 'El nombre es requerido'
-        if email is None:
-            error = 'El email es requerido'
+        nombre = request.get('nombre')
+        email = request.get('email')
+        password = request.get('password')
+        rol_id = request.get('rol_id', 1)  # Si no viene, por defecto 1 (admin)
+
+        # Validaciones básicas
+        if not nombre:
+            return jsonify({'message': 'El nombre es requerido'}), 422
+        if not email:
+            return jsonify({'message': 'El email es requerido'}), 422
+        if not password:
+            return jsonify({'message': 'El password es requerido'}), 422
+
+        try:
+            # Se crea el usuario SIN password en texto plano
+            user = User(nombre=nombre, email=email, rol_id=rol_id, password='')
             
-        if error is None:
-            try:
-                user = User(nombre=nombre, email=email, rol_id=1, password='123456')
-                db.session.add(user)
-                db.session.commit()
-                return jsonify({'message': "usuario creado con exito"}), 201
-            except IntegrityError:
-                db.session.rollback()
-                return jsonify({'message': "Usuario ya registrado"}), 409
-        return jsonify ({'message': error}), 422
-        
-        
+            # Se encripta la contraseña
+            user.generate_password(password)
+
+            db.session.add(user)
+            db.session.commit()
+
+            return jsonify({'message': "usuario creado con exito"}), 201
+
+        except IntegrityError:
+            db.session.rollback()
+            return jsonify({'message': "Usuario ya registrado"}), 409
+
+          
     @staticmethod
     def update(request, id)->tuple[Response, int]:
         nombre:str = request['nombre']
@@ -70,6 +81,8 @@ class UserController (Controller):
                 error = 'usuario no encontrado'
             
         return jsonify({'message':error}), 404
+    
+    
         
     @staticmethod
     def destroy(id) -> tuple[Response, int]:
@@ -82,3 +95,30 @@ class UserController (Controller):
         else:
             error = 'usuario no encontrado'
         return jsonify({'message':error}), 404
+    
+    
+    
+'''  
+    @staticmethod
+    def create(request) -> tuple[Response, int]:
+        nombre:str = request['nombre']
+        email:str = request['email']
+        error :str | None = None
+        if nombre is None:
+            error = 'El nombre es requerido'
+        if email is None:
+            error = 'El email es requerido'
+            
+        if error is None:
+            try:
+                user = User(nombre=nombre, email=email, rol_id=1, password='123456')
+                db.session.add(user)
+                db.session.commit()
+                return jsonify({'message': "usuario creado con exito"}), 201
+            except IntegrityError:
+                db.session.rollback()
+                return jsonify({'message': "Usuario ya registrado"}), 409
+        return jsonify ({'message': error}), 422 
+'''
+
+

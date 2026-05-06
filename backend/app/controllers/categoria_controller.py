@@ -1,9 +1,9 @@
 from sqlalchemy.exc import IntegrityError
 from flask import Response, jsonify, request
 
-from app.models.categoria import Categoria
-from app.models import db
-from app.controllers import Controller
+from app.models.categoria import Categoria    #Accedo a los atributos de Categoría
+from app.database import db
+from app.controllers import Controller        #Utilizo los métodos de la interfaz
 
 
 class CategoriaController(Controller):

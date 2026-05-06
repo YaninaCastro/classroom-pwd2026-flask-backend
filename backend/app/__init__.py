@@ -1,23 +1,17 @@
 from dotenv import load_dotenv
 from flask import Flask
-from app.models import db
+from app.database import db
 from app.config import config
 
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
-
-from app.models.user import User
-from app.models.rol import Rol
-from app.models.categoria import Categoria
-from app.models.proveedor import Proveedor
-from app.models.producto import Producto
-#from app.models.movimiento_stock import MovimientoStock
 
 from app.routes.user_routes import users
 from app.routes.rol_routes import roles
 from app.routes.categoria_routes import categorias
 from app.routes.proveedor_routes import proveedores
 from app.routes.producto_routes import productos
+from app.routes.movimiento_stock_routes import movimientos_stock
 from app.routes.auth_routes import auth_bp
 
 
@@ -38,18 +32,26 @@ def create_app():
     migrate.init_app(app=app, db=db)
     jwt.init_app(app)
     
+    from app.models.user import User
+    from app.models.rol import Rol
+    from app.models.categoria import Categoria
+    from app.models.proveedor import Proveedor
+    from app.models.producto import Producto
+    from app.models.movimiento_stock import MovimientoStock
+    
     app.register_blueprint(users)
     app.register_blueprint(roles)
     app.register_blueprint(categorias)
     app.register_blueprint(proveedores)
     app.register_blueprint(productos)
+    app.register_blueprint(movimientos_stock)
     app.register_blueprint(auth_bp)
     
     @app.route('/')
     @app.route('/<nombre>')    
     def home(nombre = None):
         if (nombre == None):
-            return f' <h1>Hola  desde programacion web dinamica 2026<h1>'
+            return f'<h1>Hola  desde programacion web dinamica 2026</h1>'
         return f'Hola {nombre} te saludamos desde programacion web dinamica 2026'
 
     @app.route('/saludo')

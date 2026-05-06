@@ -1,6 +1,6 @@
 from sqlalchemy.exc import IntegrityError
 from app.models.rol import Rol
-from app.models import db
+from app.database import db
 from flask import Response, jsonify
 from app.controllers import Controller
 
